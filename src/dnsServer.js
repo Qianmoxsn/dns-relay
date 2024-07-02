@@ -25,21 +25,20 @@ v6server.on('error', (err) => {
 v4server.on('listening', () => {
     const address = v4server.address();
     logger.info(`v4 server listening on ${address.address}:${address.port}`);
-
 });
 v6server.on('listening', () => {
     const address = v6server.address();
     logger.info(`v6 server listening on ${address.address}:${address.port}`);
 });
 
-// 处理接收到的DNS请求消息(message事件)
+// 处理接收到的DNS请求消息(message事件) - IPv4
 v4server.on('message', async (msg, rinfo) => {
     logger.trace(`v4 server got MSG from ${rinfo.address}:${rinfo.port}`);
     // 解析DNS请求消息
     let rlt = resolver.parseDnsMsg(msg);
     logger.trace(`Parse Result: ${JSON.stringify(rlt, null, 2)}`);
     // 进行本地规则匹配，如果匹配到规则，则返回规则中定义的IP地址
-    let ip
+    let ip;
     if (rlt.questions.length > 0) {
         ip = matcher.matchLocalRules(rlt, dnsRules);
     } else {
@@ -76,7 +75,6 @@ v4server.on('message', async (msg, rinfo) => {
         return;
     }
 
-
     // 如果没有匹配到规则，则转发DNS请求到上游DNS服务器
     const res = await forward.v4forward(msg);
     if (res instanceof Buffer) {
@@ -88,12 +86,26 @@ v4server.on('message', async (msg, rinfo) => {
     } else {
         throw new Error('Expected response to be a Buffer');
     }
-
 });
+
+// 处理接收到的DNS请求消息(message事件) - IPv6
 v6server.on('message', async (msg, rinfo) => {
     logger.trace(`v6 server got MSG from ${rinfo.address}:${rinfo.port}`);
+    // 直接转发到上游DNS服务器
+    const res = await forward.v6forward(msg);
+    if (res instanceof Buffer) {
+        v6server.send(res, 0, res.length, rinfo.port, rinfo.address, (err) => {
+            if (err) {
+                logger.error(`v6 server send error:\n${err.stack}`);
+            } else {
+                logger.info(`Forwarded response to ${rinfo.address}:${rinfo.port}`);
+            }
+        });
+    } else {
+        throw new Error('Expected response to be a Buffer');
+    }
 });
 
 // 开启服务器监听
-v4server.bind(53, '0.0.0.0');
-v6server.bind(53, '::');
+v4server.bind(5353, '0.0.0.0'); // 使用端口5353
+v6server.bind(5353, '::'); // 使用端口5353
