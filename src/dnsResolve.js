@@ -151,15 +151,14 @@ function encodeDnsName(name, offsetMap, startOffset) {
     let offset = startOffset;
 
     for (let i = 0; i < labels.length; i++) {
-        const label = labels.slice(i).join('.');
-        if (offsetMap.hasOwnProperty(label)) {
-            const pointer = 0xc000 | offsetMap[label];
+        const currentLabel = labels.slice(i).join('.');
+        if (offsetMap.hasOwnProperty(currentLabel)) {
+            const pointer = 0xc000 | offsetMap[currentLabel];
             const pointerBuffer = Buffer.alloc(2);
             pointerBuffer.writeUInt16BE(pointer, 0);
             buffers.push(pointerBuffer);
             return Buffer.concat(buffers);
         }
-        const currentLabel = labels.slice(0, i + 1).join('.');
         offsetMap[currentLabel] = offset;
         const labelBuffer = Buffer.from(labels[i], 'ascii');
         buffers.push(Buffer.from([labels[i].length]));
