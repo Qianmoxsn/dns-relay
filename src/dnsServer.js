@@ -92,6 +92,20 @@ v4server.on('message', async (msg, rinfo) => {
 });
 v6server.on('message', async (msg, rinfo) => {
     logger.trace(`v6 server got MSG from ${rinfo.address}:${rinfo.port}`);
+    // 解析DNS请求消息
+    let rlt = resolver.parseDnsMsg(msg);
+    logger.trace(`Parse Result: ${JSON.stringify(rlt, null, 2)}`);
+
+    const res = await forward.v6forward(msg);
+    if (res instanceof Buffer) {
+        v6server.send(res, 0, res.length, rinfo.port, rinfo.address, (err) => {
+            if (err) {
+                logger.error(`v6 server send error:\n${err.stack}`);
+            }
+        });
+    } else {
+        throw new Error('Expected response to be a Buffer');
+    }
 });
 
 // 开启服务器监听
