@@ -70,7 +70,7 @@ v4server.on('message', async (msg, rinfo) => {
             if (err) {
                 logger.error(`v4 server send error:\n${err.stack}`);
             } else {
-                logger.info(`Sent local response to ${rinfo.address}:${rinfo.port}`);
+                logger.info(`[Matched] Sent local response to ${rinfo.address}:${rinfo.port}`);
             }
         });
         return;
