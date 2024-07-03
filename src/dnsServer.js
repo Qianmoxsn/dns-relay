@@ -76,7 +76,6 @@ v4server.on('message', async (msg, rinfo) => {
         return;
     }
 
-
     // 如果没有匹配到规则，则转发DNS请求到上游DNS服务器
     const res = await forward.v4forward(msg);
     if (res instanceof Buffer) {
@@ -88,7 +87,6 @@ v4server.on('message', async (msg, rinfo) => {
     } else {
         throw new Error('Expected response to be a Buffer');
     }
-
 });
 v6server.on('message', async (msg, rinfo) => {
     logger.trace(`v6 server got MSG from ${rinfo.address}:${rinfo.port}`);
