@@ -113,6 +113,7 @@ v4server.on('message', async (msg, rinfo) => {
 
     // 如果没有匹配到规则，则转发DNS请求到上游DNS服务器
     const res = await forward.v4forward(msg);
+
     if (res instanceof Buffer) {
         let received = resolver.parseDnsMsg(res);
         if (received.answers.length > 0) {

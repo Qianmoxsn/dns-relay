@@ -17,7 +17,7 @@ class LRUCache {
 
         const { value } = this.map.get(key);
         // Check if the TTL has expired
-        console.log(Math.floor(Date.now() / 1000));
+        // console.log(Math.floor(Date.now() / 1000));
         if (value.TTL < Math.floor(Date.now() / 1000) - value.savedAt) {
             this.remove(key);
             return NaN;
