@@ -1,0 +1,1 @@
+node dnsServer.js --ipv4 1.1.1.1 --ipv6 2606:4700:4700::1111 --port 53
