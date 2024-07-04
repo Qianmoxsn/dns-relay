@@ -81,8 +81,12 @@ v4server.on('message', async (msg, rinfo) => {
     // 如果在cache中匹配到规则，则返回规则中的数据包
     if(rlt.questions.length > 0) {
         const key = rlt.questions[0].name;
+        let found = false;
         const cached = cache.get(key);
-        if (cached) {
+        if (cached && rlt.questions[0].type == cached["type"]) {
+            found = true;
+        }
+        if (found) {
             logger.info(`Cache hit: ${key}`);
             // let data = cached["data"];
             // data = resolver.parseDnsMsg(data);
@@ -103,7 +107,7 @@ v4server.on('message', async (msg, rinfo) => {
                 }
             });
             return;
-        }
+        } 
     }
 
 
@@ -115,6 +119,7 @@ v4server.on('message', async (msg, rinfo) => {
             const key = received.questions[0].name;
             let data = {
                 "data": received.answers[0].data,
+                "type": received.answers[0].type,
                 "TTL": received.answers[0].ttl,
                 "savedAt": Math.floor(Date.now() / 1000)
             }
