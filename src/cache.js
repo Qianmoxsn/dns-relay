@@ -26,6 +26,7 @@ class LRUCache {
         // Move to the front of the list to mark as most recently used
         this.remove(key);
         this.add(key, value);
+        this.ttl_refresh(value);
         return value;
     }
 
@@ -100,7 +101,13 @@ class LRUCache {
                 logger.info(`Cache added: ${key}`);
             }
         }
-    }   
+    }
+    ttl_refresh(value) {
+        for (let answer of value.answers) {
+            answer.ttl = value.TTL - Math.floor(Date.now() / 1000) + value.savedAt;
+        }
+    }
+
 }
 // // Usages
 // const cache = new LRUCache(2);
