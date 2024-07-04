@@ -1,3 +1,4 @@
+const logger = require('./logger');
 // LRUCache class that implements a Least Recently Used (LRU) cache
 // key: name of the domain
 // value: {data, TTL, savedAt}
@@ -70,8 +71,37 @@ class LRUCache {
         }
         this.map.set(key, node);
     }
-}
 
+    caching(received) {
+        if (received.answers.length > 0) {
+            if (received.questions[0].type == 1 || received.questions[0].type == 28) {
+                const key = received.questions[0].name;
+                let answers = [];
+                let minTTL = received.answers[0].ttl;
+                for (let i = 0; i < received.answers.length; i++) {
+                    if (received.answers[i].ttl < minTTL) {
+                        minTTL = received.answers[i].ttl;
+                    }
+                    answers.push({
+                        name: received.questions[0].name,
+                        type: received.answers[i].type,
+                        class: received.answers[i].class,
+                        ttl: received.answers[i].ttl,
+                        data: received.answers[i].data
+                    });
+                }
+                let data = {
+                    "type": received.answers[0].type,
+                    "TTL": minTTL,
+                    "savedAt": Math.floor(Date.now() / 1000),
+                    "answers": answers
+                }
+                this.put(key, data);
+                logger.info(`Cache added: ${key}`);
+            }
+        }
+    }   
+}
 // // Usages
 // const cache = new LRUCache(2);
 // cache.put(1, {"ip": "0.0.0.0", "type": "A", "TTL": 3});  // cache is {1=1}
