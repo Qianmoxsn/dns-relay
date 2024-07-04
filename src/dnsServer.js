@@ -66,7 +66,7 @@ v4server.on('message', async (msg, rinfo) => {
         }
         const responseBuffer = resolver.generateDnsMsg(rlt, replyCode, answers);
 
-        console.log(responseBuffer.toString('hex'));
+        // console.log(responseBuffer.toString('hex'));
 
         v4server.send(responseBuffer, 0, responseBuffer.length, rinfo.port, rinfo.address, (err) => {
             if (err) {
@@ -87,7 +87,7 @@ v4server.on('message', async (msg, rinfo) => {
             found = true;
         }
         if (found) {
-            logger.info(`Cache hit: ${key}`);
+            logger.info(`[Cached] Cache hit: ${key}`);
             answers = cached["answers"];
             logger.trace(`Answers: ${JSON.stringify(answers, null, 2)}`);
             let response = resolver.generateDnsMsg(rlt, 0, answers);
@@ -95,7 +95,7 @@ v4server.on('message', async (msg, rinfo) => {
                 if (err) {
                     logger.error(`v4 server send error:\n${err.stack}`);
                 } else {
-                    logger.info(`Sent cached response to ${rinfo.address}:${rinfo.port}`);
+                    logger.info(`[Cached] Sent cached response to ${rinfo.address}:${rinfo.port}`);
                 }
             });
             return;
@@ -152,7 +152,7 @@ v6server.on('message', async (msg, rinfo) => {
         }
         const responseBuffer = resolver.generateDnsMsg(rlt, replyCode, answers);
 
-        console.log(responseBuffer.toString('hex'));
+        // console.log(responseBuffer.toString('hex'));
 
         v6server.send(responseBuffer, 0, responseBuffer.length, rinfo.port, rinfo.address, (err) => {
             if (err) {
@@ -173,7 +173,7 @@ v6server.on('message', async (msg, rinfo) => {
             found = true;
         }
         if (found) {
-            logger.info(`Cache hit: ${key}`);
+            logger.info(`[Matched] Cache hit: ${key}`);
             answers = cached["answers"];
             logger.trace(`Answers: ${JSON.stringify(answers, null, 2)}`);
             let response = resolver.generateDnsMsg(rlt, 0, answers);
@@ -181,7 +181,7 @@ v6server.on('message', async (msg, rinfo) => {
                 if (err) {
                     logger.error(`v6 server send error:\n${err.stack}`);
                 } else {
-                    logger.info(`Sent cached response to ${rinfo.address}:${rinfo.port}`);
+                    logger.info(`[Matched] Sent cached response to ${rinfo.address}:${rinfo.port}`);
                 }
             });
             return;
