@@ -87,7 +87,7 @@ v4server.on('message', async (msg, rinfo) => {
             found = true;
         }
         if (found) {
-            logger.info(`Cache hit: ${key}`);
+            logger.info(`[Cache] Cache hit: ${key}`);
             // let data = cached["data"];
             // data = resolver.parseDnsMsg(data);
             const answers = [{
@@ -125,11 +125,13 @@ v4server.on('message', async (msg, rinfo) => {
             }
             cache.put(key, data);
 
-            logger.info(`Cache added: ${key}`);
+            logger.info(`[Cache] Cache added: ${key}`);
         }
         v4server.send(res, 0, res.length, rinfo.port, rinfo.address, (err) => {
             if (err) {
                 logger.error(`v4 server send error:\n${err.stack}`);
+            } else {
+                logger.info(`[Forward] Sent response to ${rinfo.address}:${rinfo.port}`);
             }
         });
     } else {
@@ -147,6 +149,8 @@ v6server.on('message', async (msg, rinfo) => {
         v6server.send(res, 0, res.length, rinfo.port, rinfo.address, (err) => {
             if (err) {
                 logger.error(`v6 server send error:\n${err.stack}`);
+            }else {
+                logger.info(`[Forward] Sent response to ${rinfo.address}:${rinfo.port}`);
             }
         });
     } else {

@@ -12,7 +12,6 @@ const argv = yargs
         type: 'string'
     })
     .option('ipv6', {
-        alias: 'ss',
         description: '上游DNS服务器的IPv6地址',
         type: 'string'
     })
