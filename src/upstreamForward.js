@@ -6,7 +6,8 @@ const upstreamServer = config.upstreamDNS.ipv4;
 const upstreamPort = config.upstreamDNS.port;
 const upstreamServerV6 = config.upstreamDNS.ipv6;
 
-logger.trace(`Find Upstream DNS Server: ${upstreamServer}:${upstreamPort} in Config`);
+logger.trace(`Find Upstream v4DNS Server: ${upstreamServer}:${upstreamPort} in Config`);
+logger.trace(`Find Upstream v6DNS Server: [${upstreamServerV6}]:${upstreamPort} in Config`);
 
 async function v4forward(msg) {
     return new Promise((resolve, reject) => {
