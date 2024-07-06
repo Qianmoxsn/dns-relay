@@ -8,16 +8,16 @@ let config;
 const argv = yargs
     .option('ipv4', {
         alias: 's',
-        description: '上游DNS服务器的IPv4地址',
+        description: 'IPv4 address of the upstream DNS server',
         type: 'string'
     })
     .option('ipv6', {
-        description: '上游DNS服务器的IPv6地址',
+        description: 'IPv6 address of the upstream DNS server',
         type: 'string'
     })
     .option('port', {
         alias: 'p',
-        description: '上游DNS服务器的端口号',
+        description: 'The port number of the upstream DNS server',
         type: 'number'
     })
     .help()
