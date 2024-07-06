@@ -28,7 +28,7 @@ node dnsServer.js --ipv4 1.1.1.1 --ipv6 2606:4700:4700::1111 --port 53
 | 参数              | 说明                  |     值     |
 |-----------------|---------------------|:---------:|
 | `    --version` | Show version number | [boolean] |
-| `-s, --ipv4`    | 上游DNS服务器的IPv4地址     | [string]  |
-| `    --ipv6`    | 上游DNS服务器的IPv6地址     | [string]  |
-| `-p, --port `   | 上游DNS服务器的端口号        | [number]  |
+| `-s, --ipv4`    | IPv4 address of the upstream DNS server     | [string]  |
+| `    --ipv6`    | IPv6 address of the upstream DNS server     | [string]  |
+| `-p, --port `   | The port number of the upstream DNS server        | [number]  |
 | `-h, --help`    | Show help           | [boolean] |
